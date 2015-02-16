@@ -9,19 +9,20 @@
 #define SRC_LINKEDSTACKOFSTRINGS_H_
 
 
-#include <String>
-
+#include <string>
+using namespace std;
 
 class LinkedStackOfStrings {
 public:
 	LinkedStackOfStrings();
-	bool isEmpty():
-	void push(String item);
-	String pop();
+	bool isEmpty();
+	void push(string item);
+	string pop();
 
 private:
 	class Node{
-		String item;
+	public:
+		string item;
 		Node* next;
 	};
 	Node* first;
