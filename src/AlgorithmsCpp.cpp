@@ -22,7 +22,7 @@ Graph gg(10);
 gg.addEdge(1, 4);
 gg.addEdge(3, 1);
 
-cout << "Size of graph";
+
 //  Stack of strings
 //	string instr;
 ////	getline(cin, instr);
