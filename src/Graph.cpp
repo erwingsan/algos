@@ -2,17 +2,18 @@
 
 #include "Graph.h"
 
-Graph::Graph(int VV) {
+Graph::Graph(int VV):_adj(VV) {
 	V = VV;
-	for(int i = 0; i < VV; ++i){
-		adj[i].push_back(i);
+	//adj.reserve(VV);
+	for(int i=0; i<VV; ++i){
+		_adj[i] = new list<int>;
 	}
 }
 
 void Graph::addEdge(int v, int w){
 	try{
-	adj[v].push_back(w);
-	adj[w].push_back(v);
+	_adj[v]->push_back(w);
+	_adj[w]->push_back(v);
 	}
 	catch(...)
 	{
@@ -20,4 +21,18 @@ void Graph::addEdge(int v, int w){
 	}
 }
 
+
+list<int>* Graph::adj(int v){
+	return _adj[v];
+}
+
+string Graph::toString(){
+k	string str = "Graph\n";
+	for(size_t i=0; i<_adj.size(); ++i){
+		for(list<int>::iterator it = _adj[i]->begin(); it != _adj[i]->end(); ++it){
+			str+= i+" - "+(*it);
+		}
+	}
+	return str;
+}
 

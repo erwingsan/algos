@@ -22,6 +22,9 @@ Graph gg(10);
 gg.addEdge(1, 4);
 gg.addEdge(3, 1);
 
+cout << "Print " << gg.toString();
+
+
 
 //  Stack of strings
 //	string instr;
