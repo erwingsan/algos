@@ -22,7 +22,11 @@ Graph gg(10);
 gg.addEdge(1, 4);
 gg.addEdge(3, 1);
 
-cout << "Print " << gg.toString();
+cout << gg.toString();
+
+gg.rmvEdge(1,4);
+
+cout <<  gg.toString();
 
 
 
@@ -35,6 +39,5 @@ cout << "Print " << gg.toString();
 //		cin >> instr;
 //	}
 
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;
 }

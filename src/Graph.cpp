@@ -1,6 +1,7 @@
 
 
 #include "Graph.h"
+#include <sstream>
 
 Graph::Graph(int VV):_adj(VV) {
 	V = VV;
@@ -21,18 +22,27 @@ void Graph::addEdge(int v, int w){
 	}
 }
 
+void Graph::rmvEdge(int v, int w){
+	_adj[v]->remove(w);
+	_adj[w]->remove(v);
+}
+
 
 list<int>* Graph::adj(int v){
 	return _adj[v];
 }
 
 string Graph::toString(){
-k	string str = "Graph\n";
+	string str = "\nGraph  ";
 	for(size_t i=0; i<_adj.size(); ++i){
 		for(list<int>::iterator it = _adj[i]->begin(); it != _adj[i]->end(); ++it){
-			str+= i+" - "+(*it);
+			stringstream oo;
+			oo << i << "-" << *it << "  ";
+			str += oo.str();
 		}
 	}
+
+	str += "\n";
 	return str;
 }
 
