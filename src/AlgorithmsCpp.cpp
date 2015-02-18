@@ -8,9 +8,11 @@
 
 #include <iostream>
 #include <string>
+#include <stack>
 #include <sstream>
 #include "LinkedStackOfStrings.h"
 #include "Graph.h"
+#include "Paths.h"
 
 using namespace std;
 
@@ -23,6 +25,23 @@ gg.addEdge(1, 4);
 gg.addEdge(3, 1);
 
 cout << gg.toString();
+
+gg.initialize("1 2 5 6 4 5 3 2");
+
+cout << gg.toString();
+
+Paths pp(gg,1);
+
+if(pp.hasPathTo(5)){
+	stack<int> st;
+	pp.pathTo(st, 5);
+	cout << endl;
+	while(!st.empty()){
+		cout << st.top() << " ";
+		st.pop();
+	}
+}
+
 
 gg.rmvEdge(1,4);
 

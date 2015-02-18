@@ -10,10 +10,20 @@
 
 
 #include "Graph.h"
+#include <stack>
 
 class Paths {
 public:
-	Paths(Graph G, inst s);
+	Paths(Graph G, int s);
+	bool hasPathTo(int v){return marked[v];}
+	bool pathTo(stack<int> &pstack, int v);
+
+private:
+	int _s;
+	vector<bool> marked;
+	vector<int> edgeto;
+
+	void bfs(Graph G, int s);
 };
 
 

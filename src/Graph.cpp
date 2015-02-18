@@ -32,6 +32,16 @@ list<int>* Graph::adj(int v){
 	return _adj[v];
 }
 
+void Graph::initialize(string str){
+	stringstream ss(str);
+	while(!ss.eof()){
+		int v, w;
+		ss >> v;
+		ss >> w;
+		addEdge(v, w);
+	}
+}
+
 string Graph::toString(){
 	string str = "\nGraph  ";
 	for(size_t i=0; i<_adj.size(); ++i){

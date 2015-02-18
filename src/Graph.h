@@ -19,7 +19,10 @@ public:
 	Graph(int VV);
 	void addEdge(int v, int w);
 	void rmvEdge(int v, int w);
+	void initialize(string str);
 	list<int>* adj(int v);
+
+	int vertices(){return V;}
 
 	string toString();
 };
