@@ -10,8 +10,8 @@
 
 
 Paths::Paths(Graph G, int s):_s(s) {
-	marked.reserve(G.vertices());
-	edgeto.reserve(G.vertices());
+	marked.resize(G.vertices(), false);
+	edgeto.resize(G.vertices(), -1);
 
 	bfs(G, s);
 }
@@ -24,6 +24,18 @@ bool Paths::pathTo(stack<int> &pstack, int v){
 	}
 	return true;
 
+}
+
+void Paths::printMarked(){
+	for(vector<bool>::iterator it = marked.begin(); it != marked.end(); ++it){
+		cout << (*it) << " ";
+	}
+}
+
+void Paths::printEdgeto(){
+	for(vector<int>::iterator it = edgeto.begin(); it != edgeto.end(); ++it){
+		cout << (*it) << " ";
+	}
 }
 
 void Paths::bfs(Graph G, int s) {

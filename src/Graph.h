@@ -17,6 +17,7 @@ private:
 
 public:
 	Graph(int VV);
+	Graph(const Graph &g);
 	void addEdge(int v, int w);
 	void rmvEdge(int v, int w);
 	void initialize(string str);

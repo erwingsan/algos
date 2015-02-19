@@ -11,6 +11,16 @@ Graph::Graph(int VV):_adj(VV) {
 	}
 }
 
+Graph::Graph(const Graph &g) {
+	V = g.V;
+	_adj.resize(V);
+
+	for(int i=0; i<V; ++i){
+		_adj[i] = new list<int>;
+		*_adj[i] = *g.adj(i);
+	}
+}
+
 void Graph::addEdge(int v, int w){
 	try{
 	_adj[v]->push_back(w);
@@ -43,7 +53,7 @@ void Graph::initialize(string str){
 }
 
 string Graph::toString(){
-	string str = "\nGraph  ";
+	string str;
 	for(size_t i=0; i<_adj.size(); ++i){
 		for(list<int>::iterator it = _adj[i]->begin(); it != _adj[i]->end(); ++it){
 			stringstream oo;

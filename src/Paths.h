@@ -18,6 +18,9 @@ public:
 	bool hasPathTo(int v){return marked[v];}
 	bool pathTo(stack<int> &pstack, int v);
 
+	void printMarked();
+	void printEdgeto();
+
 private:
 	int _s;
 	vector<bool> marked;
