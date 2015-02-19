@@ -119,11 +119,11 @@ nextHop(*pp, mynode, tov);
 printPath(*pp, tov);
 
 
-int tov2 = 75;
-cout << "Path 2 from " << mynode << " to " << tov2 << "\n";
-
-nextHop(*p2, mynode, tov2);
-printPath(*p2, tov2);
+//int tov2 = 75;
+//cout << "Path 2 from " << mynode << " to " << tov2 << "\n";
+//
+//nextHop(*p2, mynode, tov2);
+//printPath(*p2, tov2);
 
 
 int wallX = x+2; // x-coordinate of the wall
@@ -142,6 +142,8 @@ if (wallOrientation == "H"){
 	gg.rmvEdge(wallX + (wallY+1)*9, wallX-1 + (wallY+1)*9);
 }
 
+if(gg.connected(90, 91))
+	gg.rmvEdge(mynode, mynode+1);
 
 delete pp;
 pp = new Paths(gg,mynode);
@@ -206,7 +208,6 @@ void nextHop(Paths &p, int mynode, int finalnode){
  * CODINGAME!!
  *
 
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -218,6 +219,10 @@ void nextHop(Paths &p, int mynode, int finalnode){
 
 using namespace std;
 
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+
 
 class Graph {
 private:
@@ -226,11 +231,13 @@ private:
 
 public:
 	Graph(int VV);
+	Graph(const Graph &g);
 	void addEdge(int v, int w);
 	void rmvEdge(int v, int w);
 	void initialize(string str);
 	list<int>* adj(int v);
 	int vertices(){return V;}
+	bool connected(int v, int w);
 };
 
 class Paths {
@@ -290,29 +297,43 @@ int main()
     //9th row
     gg.initialize("72 73 73 74 74 75 75 76 76 77 77 78 78 79 79 80");
 
-    int mydest;
+    int mydest, g1dest;
+
+    Graph *g1;
 
 switch(myId){
 	case 0: // from left to right
+	    g1 = new Graph(gg);
 		// right node (83)
 		gg.initialize("83 8 83 17 83 26 83 35 83 44 83 53 83 62 83 71 83 80");
 		mydest = 83;
+		g1->initialize("81 0 81 9 81 18 81 27 81 36 81 45 81 54 81 63 81 72");
+		g1dest = 81;
 		break;
 
 	case 1: // from right to left
+		g1 = new Graph(gg);
 		// left node (81)
 		 gg.initialize("81 0 81 9 81 18 81 27 81 36 81 45 81 54 81 63 81 72");
 		 mydest = 81;
+		 g1->initialize("83 8 83 17 83 26 83 35 83 44 83 53 83 62 83 71 83 80");
+		 g1dest = 83;
 		break;
 
 	case 2: // from top to bottom
+	    g1 = new Graph(gg);
 		// bottom node (84)
 		gg.initialize("84 72 84 73 84 74 84 75 84 76 84 77 84 78 84 79 84 80");
 		mydest = 84;
+		g1->initialize("81 0 81 9 81 18 81 27 81 36 81 45 81 54 81 63 81 72");
+		g1dest = 81;
 		break;
 }
-    int mypos;
-    Paths *pp;
+    int mypos, g1pos;
+    Paths *pp, *p1;
+    int run = 0;
+    int mywalls;
+    bool playerOut = false;
 
     // game loop
     while (1) {
@@ -328,6 +349,14 @@ switch(myId){
             if(i == myId){
                 mypos = x + y*9;
                 cerr << mypos << endl;
+                mywalls = wallsLeft;
+            }else{
+                if (i == 0 || i == 1) {
+                    g1pos = x + y*9;
+                    cerr << g1pos << endl;
+                    if(x == -1)
+                         playerOut = true;
+                }
             }
         }
 
@@ -340,20 +369,79 @@ switch(myId){
             cin >> wallX >> wallY >> wallOrientation; cin.ignore();
 
             updateGraph(gg, wallX, wallY, wallOrientation);
+            updateGraph(*g1, wallX, wallY, wallOrientation);
         }
 
         // Write an action using cout. DON'T FORGET THE "<< endl"
         // To debug: cerr << "Debug messages..." << endl;
 
+        string go;
         // Compute paths
         cerr << "Mypos " << mypos << endl;
         pp = new Paths(gg, mypos);
+        p1 = new Paths(*g1, g1pos);
 
+        //if(run > 3 && run%4 == 0 && mywalls > 0 && !playerOut){
+        if(mywalls > 0 && !playerOut){
+            // check hop
+            stack<int> st;
+	        p1->pathTo(st, g1dest);
+
+	        cerr << "g1 hops " << st.size() << endl;
+
+	        if(st.size() < 4){
+
+                int g1nextnode = st.top();
+
+                cerr << "g1pos " << g1pos << " " << g1pos%9 << g1pos/9 << endl;
+                cerr << "g1next " << g1nextnode << " " << g1nextnode%9 << g1nextnode/9 << endl;
+
+                int delta = -1;
+
+
+                if(g1pos == g1nextnode+1 || g1pos == g1nextnode-1){
+                    int wallnode = g1dest == 81? g1pos : g1nextnode;
+                    cerr << "wallnode " << wallnode << endl;
+                if(gg.connected(wallnode, wallnode+delta) &&
+                    gg.connected(wallnode+9, wallnode+9+delta) &&
+                    gg.connected(wallnode, wallnode+9) &&
+                    gg.connected(wallnode+delta, wallnode+9+delta)){
+                    //prepare wall
+                    int x1 = wallnode%9;
+                    int y1 = wallnode/9;
+
+                    cout << x1 << " " << y1 << " " << "V" << endl;
+                    delete pp;
+                    delete p1;
+                    run++;
+                    continue;
+                }else
+                {
+                    wallnode -= 9;
+                    cerr << "new wallnode " << wallnode << endl;
+                    if(gg.connected(wallnode, wallnode+delta) &&
+                    gg.connected(wallnode+9, wallnode+9+delta) &&
+                    gg.connected(wallnode, wallnode+9) &&
+                    gg.connected(wallnode+delta, wallnode+9+delta)){
+                    //prepare wall
+                    int x1 = wallnode%9;
+                    int y1 = wallnode/9;
+
+                    cout << x1 << " " << y1 << " " << "V" << endl;
+                    delete pp;
+                    delete p1;
+                    run++;
+                    continue;
+                    }
+                }
+
+                }
+	        }
+        }
         // get next hop
         stack<int> st;
 	    pp->pathTo(st, mydest);
 
-        string go;
         int nextnode = st.top();
 
         cerr << "Nextnode  " << nextnode << endl;
@@ -374,6 +462,8 @@ switch(myId){
         cout << go << endl; // action: LEFT, RIGHT, UP, DOWN or "putX putY putOrientation" to place a wall
 
         delete pp;
+        delete p1;
+        run++;
     }
 }
 
@@ -398,6 +488,16 @@ Graph::Graph(int VV):_adj(VV) {
 	//adj.reserve(VV);
 	for(int i=0; i<VV; ++i){
 		_adj[i] = new list<int>;
+	}
+}
+
+Graph::Graph(const Graph &g) {
+	V = g.V;
+	_adj.resize(V);
+
+	for(int i=0; i<V; ++i){
+		_adj[i] = new list<int>;
+		*_adj[i] = *g._adj[i];
 	}
 }
 
@@ -432,6 +532,21 @@ void Graph::initialize(string str){
 	}
 }
 
+bool Graph::connected(int v, int w){
+	try{
+		list<int>::iterator it;
+		it = find(_adj[v]->begin(), _adj[v]->end(), w);
+		if(it != _adj[v]->end())
+			return true;
+
+		return false;
+
+	}
+	catch(...)
+	{
+		return false;
+	}
+}
 Paths::Paths(Graph G, int s):_s(s) {
 	marked.resize(G.vertices(), false);
 	edgeto.resize(G.vertices(), -1);
@@ -469,5 +584,6 @@ void Paths::bfs(Graph G, int s) {
 	}
 
 }
+
 
 ***/

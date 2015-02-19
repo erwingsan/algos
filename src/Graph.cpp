@@ -17,7 +17,7 @@ Graph::Graph(const Graph &g) {
 
 	for(int i=0; i<V; ++i){
 		_adj[i] = new list<int>;
-		*_adj[i] = *g.adj(i);
+		*_adj[i] = *g._adj[i];
 	}
 }
 
@@ -35,6 +35,22 @@ void Graph::addEdge(int v, int w){
 void Graph::rmvEdge(int v, int w){
 	_adj[v]->remove(w);
 	_adj[w]->remove(v);
+}
+
+bool Graph::connected(int v, int w){
+	try{
+		list<int>::iterator it;
+		it = find(_adj[v]->begin(), _adj[v]->end(), w);
+		if(it != _adj[v]->end())
+			return true;
+
+		return false;
+
+	}
+	catch(...)
+	{
+		return false;
+	}
 }
 
 

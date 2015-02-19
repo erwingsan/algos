@@ -7,6 +7,7 @@
 #include <list>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -22,6 +23,7 @@ public:
 	void rmvEdge(int v, int w);
 	void initialize(string str);
 	list<int>* adj(int v);
+	bool connected(int v, int w);
 
 	int vertices(){return V;}
 
