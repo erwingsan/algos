@@ -142,7 +142,7 @@ if (wallOrientation == "H"){
 	gg.rmvEdge(wallX + (wallY+1)*9, wallX-1 + (wallY+1)*9);
 }
 
-if(gg.connected(90, 91))
+if(gg.connected(-5, -6))
 	gg.rmvEdge(mynode, mynode+1);
 
 delete pp;
@@ -165,6 +165,7 @@ cout <<  gg.toString();
 //		cin >> instr;
 //	}
 
+	cout << "done!" << endl;
 	return 0;
 }
 

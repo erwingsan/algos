@@ -39,6 +39,8 @@ void Graph::rmvEdge(int v, int w){
 
 bool Graph::connected(int v, int w){
 	try{
+		if(v<0 || w<0 || v >= V || w >= V ) return false;
+
 		list<int>::iterator it;
 		it = find(_adj[v]->begin(), _adj[v]->end(), w);
 		if(it != _adj[v]->end())

@@ -4,7 +4,7 @@
  *
  *
  * CODINGAME!!
- */
+
 
 #include <iostream>
 #include <string>
@@ -53,6 +53,7 @@ private:
 };
 
 void updateGraph(Graph &gg, int wallX, int wallY, string wallOrientation);
+bool createWall(Graph &gg, int pos, int next, int dest);
 
 int main()
 {
@@ -95,43 +96,58 @@ int main()
     //9th row
     gg.initialize("72 73 73 74 74 75 75 76 76 77 77 78 78 79 79 80");
 
-    int mydest, g1dest;
+    int mydest, g1dest, g2dest;
 
-    Graph *g1;
+    Graph *g1, *g2;
 
 switch(myId){
 	case 0: // from left to right
 	    g1 = new Graph(gg);
+	    g2 = new Graph(gg);
 		// right node (83)
 		gg.initialize("83 8 83 17 83 26 83 35 83 44 83 53 83 62 83 71 83 80");
 		mydest = 83;
 		g1->initialize("81 0 81 9 81 18 81 27 81 36 81 45 81 54 81 63 81 72");
 		g1dest = 81;
+		g2->initialize("84 72 84 73 84 74 84 75 84 76 84 77 84 78 84 79 84 80");
+		g2dest = 84;
 		break;
 
 	case 1: // from right to left
 		g1 = new Graph(gg);
+		g2 = new Graph(gg);
 		// left node (81)
 		 gg.initialize("81 0 81 9 81 18 81 27 81 36 81 45 81 54 81 63 81 72");
 		 mydest = 81;
 		 g1->initialize("83 8 83 17 83 26 83 35 83 44 83 53 83 62 83 71 83 80");
 		 g1dest = 83;
+		 g2->initialize("84 72 84 73 84 74 84 75 84 76 84 77 84 78 84 79 84 80");
+		 g2dest = 84;
 		break;
 
 	case 2: // from top to bottom
 	    g1 = new Graph(gg);
+	    g2 = new Graph(gg);
 		// bottom node (84)
 		gg.initialize("84 72 84 73 84 74 84 75 84 76 84 77 84 78 84 79 84 80");
 		mydest = 84;
-		g1->initialize("81 0 81 9 81 18 81 27 81 36 81 45 81 54 81 63 81 72");
-		g1dest = 81;
+		 g1->initialize("83 8 83 17 83 26 83 35 83 44 83 53 83 62 83 71 83 80");
+		 g1dest = 83;
+		 g2->initialize("81 0 81 9 81 18 81 27 81 36 81 45 81 54 81 63 81 72");
+		 g2dest = 81;
 		break;
 }
-    int mypos, g1pos;
-    Paths *pp, *p1;
+    int mypos, g1pos, g2pos;
+    Paths *pp=0, *p1=0;
     int run = 0;
     int mywalls;
     bool playerOut = false;
+    bool player1Out = false;
+    bool player2Out = false;
+    int posv[3];
+    int wallsv[3];
+    bool playerOutv[3] = {false, false, false};
+    int hopsToAttack = 3;
 
     // game loop
     while (1) {
@@ -141,21 +157,44 @@ switch(myId){
             int wallsLeft; // number of walls available for the player
             cin >> x >> y >> wallsLeft; cin.ignore();
 
-            cerr << i << " " << x << " " << y << endl;
+           // cerr << i << " " << x << " " << y << endl;
 
-            //set my position
-            if(i == myId){
-                mypos = x + y*9;
-                cerr << mypos << endl;
-                mywalls = wallsLeft;
-            }else{
-                if (i == 0 || i == 1) {
-                    g1pos = x + y*9;
-                    cerr << g1pos << endl;
-                    if(x == -1)
-                         playerOut = true;
+            //set data
+            posv[i] = x + y*9;
+            wallsv[i] = wallsLeft;
+            if(x == -1) playerOutv[i] = true;
+
+        }
+
+        //set my position and enemy 1
+        mypos = posv[myId];
+        mywalls = wallsv[myId];
+        cerr << "mypos mywalls " << mypos << mywalls << endl;
+        switch(myId){
+            case 0:
+                g1pos = posv[1];
+                player1Out = playerOutv[1];
+                if(playerCount == 3){
+                    g2pos = posv[2];
+                    player2Out = playerOutv[2];
                 }
-            }
+                break;
+            case 1:
+                g1pos = posv[0];
+                player1Out = playerOutv[0];
+                if(playerCount == 3){
+                    g2pos = posv[2];
+                    player2Out = playerOutv[2];
+                }
+                break;
+            case 2:
+                g1pos = posv[0];
+                player1Out = playerOutv[0];
+                if(playerCount == 3){
+                    g2pos = posv[1];
+                    player2Out = playerOutv[1];
+                }
+                break;
         }
 
         int wallCount; // number of walls on the board
@@ -168,6 +207,7 @@ switch(myId){
 
             updateGraph(gg, wallX, wallY, wallOrientation);
             updateGraph(*g1, wallX, wallY, wallOrientation);
+            updateGraph(*g2, wallX, wallY, wallOrientation);
         }
 
         // Write an action using cout. DON'T FORGET THE "<< endl"
@@ -175,71 +215,49 @@ switch(myId){
 
         string go;
         // Compute paths
-        cerr << "Mypos " << mypos << endl;
         pp = new Paths(gg, mypos);
-        p1 = new Paths(*g1, g1pos);
 
-        //if(run > 3 && run%4 == 0 && mywalls > 0 && !playerOut){
-        if(mywalls > 0 && !playerOut){
+        // Compute my path
+        stack<int> st;
+	    pp->pathTo(st, mydest);
+	    playerOut = player1Out;
+
+	    // if enemy 1 is out -> go against 2
+	    if(player1Out && playerCount == 3){
+	     playerOut = player2Out;
+	     g1 = g2;
+	     g1pos = g2pos;
+	     g1dest = g2dest;
+	    }
+
+       if(mywalls > 0 && !playerOut){
+            // compute path 1
+            p1 = new Paths(*g1, g1pos);
             // check hop
-            stack<int> st;
-	        p1->pathTo(st, g1dest);
+            stack<int> st1;
+	        p1->pathTo(st1, g1dest);
 
-	        cerr << "g1 hops " << st.size() << endl;
+	        cerr << "g1 hops " << st1.size() << endl;
 
-	        if(st.size() < 4){
-
-                int g1nextnode = st.top();
-
+	        if(st1.size() <= hopsToAttack  && st.size() >= st1.size()){ //st1.size() <= 7  &&
+                int g1nextnode = st1.top();
+                hopsToAttack++;
                 cerr << "g1pos " << g1pos << " " << g1pos%9 << g1pos/9 << endl;
                 cerr << "g1next " << g1nextnode << " " << g1nextnode%9 << g1nextnode/9 << endl;
 
-                int delta = -1;
 
-
-                if(g1pos == g1nextnode+1 || g1pos == g1nextnode-1){
-                    int wallnode = g1dest == 81? g1pos : g1nextnode;
-                    cerr << "wallnode " << wallnode << endl;
-                if(gg.connected(wallnode, wallnode+delta) &&
-                    gg.connected(wallnode+9, wallnode+9+delta) &&
-                    gg.connected(wallnode, wallnode+9) &&
-                    gg.connected(wallnode+delta, wallnode+9+delta)){
-                    //prepare wall
-                    int x1 = wallnode%9;
-                    int y1 = wallnode/9;
-
-                    cout << x1 << " " << y1 << " " << "V" << endl;
+                if (createWall(gg, g1pos, g1nextnode, g1dest)){
                     delete pp;
-                    delete p1;
+                    if(p1) delete p1;
                     run++;
                     continue;
-                }else
-                {
-                    wallnode -= 9;
-                    cerr << "new wallnode " << wallnode << endl;
-                    if(gg.connected(wallnode, wallnode+delta) &&
-                    gg.connected(wallnode+9, wallnode+9+delta) &&
-                    gg.connected(wallnode, wallnode+9) &&
-                    gg.connected(wallnode+delta, wallnode+9+delta)){
-                    //prepare wall
-                    int x1 = wallnode%9;
-                    int y1 = wallnode/9;
-
-                    cout << x1 << " " << y1 << " " << "V" << endl;
-                    delete pp;
-                    delete p1;
-                    run++;
-                    continue;
-                    }
                 }
 
-                }
+               hopsToAttack = 3;
 	        }
         }
-        // get next hop
-        stack<int> st;
-	    pp->pathTo(st, mydest);
 
+        // get next hop
         int nextnode = st.top();
 
         cerr << "Nextnode  " << nextnode << endl;
@@ -260,9 +278,83 @@ switch(myId){
         cout << go << endl; // action: LEFT, RIGHT, UP, DOWN or "putX putY putOrientation" to place a wall
 
         delete pp;
-        delete p1;
+        //if(p1 != 0 ) delete p1;
         run++;
     }
+}
+
+bool createWall(Graph &gg, int pos, int next, int dest){
+    int delta = -1;
+
+    if(pos == next+1 || pos == next-1){ // enemy going left or rigth -> vertical wall
+
+       int wallnode = next == pos-1? pos : next; // going left or right
+
+       cerr << "wallnode V " << wallnode << endl;
+       if(gg.connected(wallnode, wallnode+delta) &&
+            gg.connected(wallnode+9, wallnode+9+delta) &&
+            gg.connected(wallnode, wallnode+9) &&
+            gg.connected(wallnode+delta, wallnode+9+delta)){
+
+            //prepare wall
+            int x1 = wallnode%9;
+            int y1 = wallnode/9;
+            cout << x1 << " " << y1 << " " << "V" << endl;
+            return true;
+        }
+        else{
+            wallnode -= 9;
+            cerr << "new wallnode V " << wallnode << endl;
+            if(gg.connected(wallnode, wallnode+delta) &&
+                gg.connected(wallnode+9, wallnode+9+delta) &&
+                gg.connected(wallnode, wallnode+9) &&
+                gg.connected(wallnode+delta, wallnode+9+delta)){
+
+                //prepare wall
+                int x1 = wallnode%9;
+                int y1 = wallnode/9;
+                cout << x1 << " " << y1 << " " << "V" << endl;
+
+                return true;
+            }
+        }
+    }
+    else{
+        if(next == pos+9 || next == pos-9){ //enemy going down or up
+
+            int wallnode = next == pos+9? next : pos; // going down or up
+            cerr << "wallnode H " << wallnode << endl;
+
+            if(gg.connected(wallnode, wallnode-9) &&
+                gg.connected(wallnode+1, wallnode-8) &&
+                gg.connected(wallnode, wallnode+1) &&
+                gg.connected(wallnode-9, wallnode-8)){
+
+                //prepare wall
+                int x1 = wallnode%9;
+                int y1 = wallnode/9;
+                cout << x1 << " " << y1 << " " << "H" << endl;
+                return true;
+            }
+            else{
+                wallnode -= 1;
+                cerr << "new wallnode H " << wallnode << endl;
+                if(gg.connected(wallnode, wallnode-9) &&
+                gg.connected(wallnode+1, wallnode-8) &&
+                gg.connected(wallnode, wallnode+1) &&
+                gg.connected(wallnode-9, wallnode-8)){
+
+                //prepare wall
+                int x1 = wallnode%9;
+                int y1 = wallnode/9;
+                cout << x1 << " " << y1 << " " << "H" << endl;
+                return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 
@@ -332,6 +424,8 @@ void Graph::initialize(string str){
 
 bool Graph::connected(int v, int w){
 	try{
+		if(v<0 || w<0 || v >= V || w >= V ) return false;
+
 		list<int>::iterator it;
 		it = find(_adj[v]->begin(), _adj[v]->end(), w);
 		if(it != _adj[v]->end())
@@ -345,6 +439,7 @@ bool Graph::connected(int v, int w){
 		return false;
 	}
 }
+
 Paths::Paths(Graph G, int s):_s(s) {
 	marked.resize(G.vertices(), false);
 	edgeto.resize(G.vertices(), -1);
@@ -384,4 +479,5 @@ void Paths::bfs(Graph G, int s) {
 }
 
 
+*/
 
