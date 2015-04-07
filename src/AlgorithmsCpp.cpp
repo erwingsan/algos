@@ -20,7 +20,7 @@ using namespace std;
 void printPath(Paths &p, int tov);
 void nextHop(Paths &p, int mynode, int finalnode);
 
-int main() {
+int mainX() {
 
 //  Graph
 
