@@ -6,7 +6,7 @@ using namespace std;
 
 void reverseWords(string &s);
 
-int main() {
+int mainR() {
 
 //get strings
 
