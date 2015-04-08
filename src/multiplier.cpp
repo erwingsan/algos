@@ -24,6 +24,7 @@ int mainM() {
 
 	cout << "Res: " << res;
 
+    return 0;
 
 }
 
