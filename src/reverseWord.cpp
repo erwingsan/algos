@@ -6,7 +6,7 @@ using namespace std;
 
 void reverseWords(string &s);
 
-int main() {
+int mainR() {
 
 //get strings
 
@@ -19,6 +19,8 @@ int main() {
 	reverseWords(str);
 
 	cout << "Res: " << str;
+    
+    return 0;
 
 }
 
