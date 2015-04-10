@@ -82,6 +82,8 @@ int mainXXX()
 //        cout << res->val << "->";
 //        res = res->next;
 //    }
+    
+    return 0;
 
 }
 

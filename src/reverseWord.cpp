@@ -19,6 +19,8 @@ int mainR() {
 	reverseWords(str);
 
 	cout << "Res: " << str;
+    
+    return 0;
 
 }
 
