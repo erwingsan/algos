@@ -6,7 +6,7 @@ using namespace std;
 
 string longestPalindrome(string s);
 
-int main() {
+int mainlp() {
 
 //get strings
 

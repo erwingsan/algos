@@ -56,7 +56,7 @@ void mergeSort(int *ar, int f, int l, int s) {
     
     
 }
-int main(void) {
+int mainMS(void) {
     
     int _ar_size;
     cout << "Merge" << endl;
