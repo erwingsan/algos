@@ -17,7 +17,7 @@ int heap_maximum(vector<int> hh);
 void heap_increase(vector<int> &hh, int pos, int key);
 void heap_insert(vector<int> &hh, int key);
 
-int main(){
+int mainH(){
     int s;
     cout<<"Heap size: ";
     cin >> s;
@@ -64,7 +64,7 @@ int main(){
     heap_insert(hh, 20);
     printh(hh);
 
-    
+    return 0;
 }
 
 void build_max_heap(vector<int> &hh){
