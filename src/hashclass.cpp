@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int main(){
+int mainHC(){
     
     hashclass myhash;
     
