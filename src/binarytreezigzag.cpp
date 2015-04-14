@@ -106,7 +106,7 @@ public:
     }
 };
 
-int main(){
+int mainBTZ(){
     Solution sol;
     // 	{1,2,3,4,#,#,5}
     TreeNode *root = new TreeNode(1);
@@ -123,5 +123,5 @@ int main(){
     vector<vector<int> > ans = sol.zigzagLevelOrder(root);
     
     cout << "Done! " << endl;
-    
+    return 0;
 }
