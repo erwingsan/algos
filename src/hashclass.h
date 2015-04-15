@@ -26,7 +26,7 @@ private:
        // NodeHash *next;
        // NodeHash *prev;
     };
-    vector<list<NodeHash>> table;
+    vector<list<NodeHash> > table;
     int size;
     int used;
     int mods[3] = {7, 17, 29};
