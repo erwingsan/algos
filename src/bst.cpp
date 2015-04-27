@@ -174,7 +174,7 @@ void bst_delete(BSTNode *h, BSTNode *node){
 BSTNode* successor(BSTNode *node){
     
     if(node->right != 0){
-        return minimum(node->left);
+        return minimum(node->right);
     }
     
     while(node->p->left != node && node->p != 0){
