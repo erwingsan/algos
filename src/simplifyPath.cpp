@@ -49,12 +49,14 @@ public:
 
 
 
-int main(){
+int mainSP(){
     //string path = "/a/./b/../../c/";
     string path = "/...";
     cout << "Simplify Path" << endl;
     Solution sol;
     cout << sol.simplifyPath(path)<< endl;
+
+    return 0;
 }
     
 

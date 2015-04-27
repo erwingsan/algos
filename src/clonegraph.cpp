@@ -72,7 +72,7 @@ public:
 
 
 
-int main() {
+int mainCG() {
 
 	// Create nodes
 
