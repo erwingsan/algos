@@ -55,7 +55,7 @@ int mainSP(){
     cout << "Simplify Path" << endl;
     Solution sol;
     cout << sol.simplifyPath(path)<< endl;
-    
+
     return 0;
 }
     
