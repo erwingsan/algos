@@ -48,7 +48,7 @@ public:
     }
 };
 
-int main(){
+int mainPAR(){
     
     Solution sol;
     

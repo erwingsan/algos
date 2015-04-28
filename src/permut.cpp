@@ -59,7 +59,7 @@ void printmanyv(vector<vector<int> > myvv){
 	cout << endl;
 }
 
-int main(){
+int mainPE(){
 
 	cout << "Permutation "<< endl;
 
