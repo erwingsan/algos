@@ -5,9 +5,9 @@
 
 using namespace std;
 
-class Solution {
-public:
-    vector<string> letterCombinations(string digits) {
+//class Solution {
+//public:
+//    vector<string> letterCombinations(string digits) {
 
 //        char letters[][] = {{'0', '0', '0', '0'},
 //                            {'0', '0', '0', '0'},
@@ -54,5 +54,5 @@ public:
 //        return total;
 //
 
-    }
-};
+//    }
+//};

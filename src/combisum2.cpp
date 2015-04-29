@@ -68,7 +68,7 @@ void printvs(vector<vector<int> > myvv){
 	cout << endl;
 }
 
-int main(){
+int mainCOMB(){
 
 	vector<int> num;
 	num.push_back(10);
@@ -87,8 +87,6 @@ int main(){
 	printvs(resp);
 
 
-
-
-
+    return 0;
 
 }

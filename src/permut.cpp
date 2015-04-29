@@ -40,7 +40,8 @@ public:
 			goforit(num, visited, curr, i);
 
 		}
-
+        
+        return res;
 
 	}
 };
@@ -76,6 +77,8 @@ int mainPE(){
 
 
 	printmanyv(myvv);
+    
+    return 0;
 
 
 }
